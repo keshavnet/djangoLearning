@@ -1,8 +1,8 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
-import requests
-import json
+from django.views import generic
+
 # from django.template import loader
 
 from .models import Question, Choice
@@ -19,19 +19,14 @@ def index(req):
     return render(req, 'polls/index.html', context)
 
 
-def detail(req, question_id):
-    # try:
-    #     question = Question.objects.get(pk=question_id)
-    # except Question.DoesNotExist:
-    #     raise Http404("Question does not exist")
-    # return HttpResponse("You're looking at question %s." % question_id)
-    question = get_object_or_404(Question, pk=question_id)
-    return render(req, 'polls/detail.html', {'question': question})
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'polls/detail.html'
 
 
-def results(req, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(req, 'polls/results.html', {'question': question})
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/results.html'
 
 
 def vote(req, question_id):
